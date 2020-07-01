@@ -1,16 +1,16 @@
-/* using Library.Models;
+using LibraryWebApp.Models;
 //using Microsoft.EntityFrameworkCore;
 //using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
  
-namespace Library.Repository
+namespace LibraryWebApp.Repository
 {
     public class RepositoryContext
     {
 
         private readonly IMongoDatabase _db;
 
-        public IMongoCollection<ToolItem> Tools =>_db.GetCollection<ToolItem>("Tools");
+        public IMongoCollection<Tool> Tools =>_db.GetCollection<Tool>("Tools");
 
         public RepositoryContext(IMongoClient client, string database)
         {
@@ -18,4 +18,4 @@ namespace Library.Repository
         }
  
      }
-} */
+}
