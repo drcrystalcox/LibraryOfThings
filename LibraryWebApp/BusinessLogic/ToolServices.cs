@@ -40,5 +40,54 @@ namespace LibraryWebApp.BusinessLogic{
             //do mapping if necessary
             return result;
         }
+
+
+        public Tool CreateTool(ToolForCreationDto toolForCreation){
+            //***Validate input;
+            //TODO
+
+            //map the creation dto to regular tool
+            Tool tool = new Tool(){
+                   
+                    Name=toolForCreation.Name,
+                    Description=toolForCreation.Description,
+                    DailyCost=toolForCreation.DailyCost,
+                    ReplacementCost=toolForCreation.ReplacementCost,
+                    QuantityAvailable=toolForCreation.QuantityAvailable
+                };
+                Tool createdTool=_toolRepository.Create(tool);
+                return createdTool;
+
+        }
+
+        public void UpdateTool(string id, ToolForUpdateDto toolForUpdate)
+		{
+			// Want to try to find the owner first before updating. Throw error if the owner does not exist.
+			// What if the user attempts to modify the id field for the owner? Throw error. 
+			var tool = GetToolById(id);
+			if (tool == null)
+			{
+				//_logger.LogError($"Owner with id: {id}, hasn't been found in db.");
+				return;
+				// TODO: need to return notfound to the user
+			}
+
+//TODO validate new tool
+			//_mapper.Map(owner, ownerEntity);
+            tool.Name=toolForUpdate.Name;
+            tool.Description=toolForUpdate.Description;
+            tool.DailyCost=toolForUpdate.DailyCost;
+            tool.ReplacementCost=toolForUpdate.ReplacementCost;
+            tool.QuantityAvailable=toolForUpdate.QuantityAvailable;
+			 _toolRepository.Update(tool.ToolId, tool);
+		}
+
+		public void DeleteTool(Tool toolToDelete)
+		{
+			 _toolRepository.Remove(toolToDelete);
+             //todo shouldn't these return true or false? or deal with an exception
+            
+		}
+
     }
 }

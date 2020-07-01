@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using LibraryWebApp.BusinessLogic;
+using LibraryWebApp.Models;
 
 namespace LibraryWebApp.Controllers
 {
@@ -63,6 +64,87 @@ namespace LibraryWebApp.Controllers
                     return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpPost]
+        public  IActionResult CreateTool([FromBody]ToolForCreationDto toolForCreation)
+        {
+            try
+            {
+                if (toolForCreation == null)
+                {
+                    _logger.LogError("Owner object sent from client is null.");
+                    return BadRequest("Owner object is null");
+                }
+        
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid owner object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                
+                Tool createdTool = _toolServices.CreateTool(toolForCreation);
+
+                return CreatedAtRoute("ToolById", new { id = createdTool.ToolId }, createdTool);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside CreateOwner action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+ [HttpPut("{id}")]
+        public IActionResult UpdateTool(string id, [FromBody]ToolForUpdateDto toolForUpdate)
+        {
+            try
+            {
+                if (toolForUpdate == null)
+                {
+                    _logger.LogError("Owner object sent from client is null.");
+                    return BadRequest("Owner object is null");
+                }
+        
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid owner object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+
+               _toolServices.UpdateTool(id, toolForUpdate);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside UpdateOwner action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTool(string id)
+        {
+            try
+            {
+                var tool = _toolServices.GetToolById(id);
+                if(tool == null)
+                {
+                    _logger.LogError($"Owner with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+        
+                _toolServices.DeleteTool(tool);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside DeleteOwner action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
 
     }
 }
