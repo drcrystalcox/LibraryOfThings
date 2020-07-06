@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
+using LibraryWebApp.Repository;
+using LibraryWebApp.BusinessLogic;
 
 namespace LibraryWebApp
 {
@@ -25,6 +28,11 @@ namespace LibraryWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IMongoClient>(s => new MongoClient(Configuration["LibraryDatabaseSettings:ConnectionString"]));
+    services.AddSingleton(s => new RepositoryContext(s.GetRequiredService<IMongoClient>(), Configuration["LibraryDatabaseSettings:DatabaseName"]));
+
+             services.AddSingleton<IToolServices, ToolServices>();
+            services.AddSingleton<IToolRepository,ToolRepository>();
             services.AddControllers();
         }
 
