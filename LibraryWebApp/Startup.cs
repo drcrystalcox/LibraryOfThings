@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
+using LibraryWebApp.Repository;
+using LibraryWebApp.BusinessLogic;
 
 namespace LibraryWebApp
 {
@@ -25,6 +28,15 @@ namespace LibraryWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IMongoClient>(s => new MongoClient(Configuration["LibraryDatabaseSettings:ConnectionString"]));
+    services.AddSingleton(s => new RepositoryContext(s.GetRequiredService<IMongoClient>(), Configuration["LibraryDatabaseSettings:DatabaseName"]));
+
+             services.AddSingleton<IToolServices, ToolServices>();
+            services.AddSingleton<IToolRepository,ToolRepository>();
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+    services.AddSwaggerGen();
+
             services.AddControllers();
         }
 
@@ -37,6 +49,19 @@ namespace LibraryWebApp
             }
 
             app.UseHttpsRedirection();
+
+
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+    app.UseSwagger();
+
+    // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+    // specifying the Swagger JSON endpoint.
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+       // c.RoutePrefix()
+    });
 
             app.UseRouting();
 
