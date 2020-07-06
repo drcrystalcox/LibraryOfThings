@@ -23,3 +23,8 @@ C:\Users\crystal\source\repos\LibraryOfThings\LibraryWebApp\bin\Debug\netcoreapp
 C:\Users\crystal\source\repos\LibraryOfThings\LibraryWebApp\bin\Debug\netcoreapp3.1\MongoDB.Libmongocrypt.dll
 C:\Users\crystal\source\repos\LibraryOfThings\LibraryWebApp\bin\Debug\netcoreapp3.1\SharpCompress.dll
 C:\Users\crystal\source\repos\LibraryOfThings\LibraryWebApp\obj\Debug\netcoreapp3.1\LibraryWebApp.csproj.CopyComplete
+C:\Users\crystal\source\repos\LibraryOfThings\LibraryWebApp\bin\Debug\netcoreapp3.1\Microsoft.OpenApi.dll
+C:\Users\crystal\source\repos\LibraryOfThings\LibraryWebApp\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\crystal\source\repos\LibraryOfThings\LibraryWebApp\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\crystal\source\repos\LibraryOfThings\LibraryWebApp\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\crystal\source\repos\LibraryOfThings\LibraryWebApp\obj\Debug\netcoreapp3.1\LibraryWebApp.MvcApplicationPartsAssemblyInfo.cs
