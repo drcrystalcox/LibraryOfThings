@@ -11,6 +11,7 @@ namespace LibraryWebApp.Repository
         private readonly IMongoDatabase _db;
 
         public IMongoCollection<Tool> Tools =>_db.GetCollection<Tool>("Tools");
+        public IMongoCollection<CheckoutRecord> CheckoutRecords => _db.GetCollection<CheckoutRecord>("CheckoutRecords");
 
         public RepositoryContext(IMongoClient client, string database)
         {

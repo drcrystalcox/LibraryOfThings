@@ -33,6 +33,8 @@ namespace LibraryWebApp
 
              services.AddSingleton<IToolServices, ToolServices>();
             services.AddSingleton<IToolRepository,ToolRepository>();
+            services.AddSingleton<ICheckoutRecordRepository,CheckoutRecordRepository>();
+            services.AddSingleton<ICheckoutRecordServices,CheckoutRecordServices>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
     services.AddSwaggerGen();

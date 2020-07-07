@@ -54,6 +54,7 @@ namespace LibraryWebApp.BusinessLogic{
                     DailyCost=toolForCreation.DailyCost,
                     ReplacementCost=toolForCreation.ReplacementCost,
                     QuantityAvailable=toolForCreation.QuantityAvailable
+                    
                 };
                 Tool createdTool=_toolRepository.Create(tool);
                 return createdTool;
