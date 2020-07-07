@@ -20,23 +20,50 @@ namespace LibraryWebApp.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-        protected RepositoryContext _repositoryContext;
-        public WeatherForecastController(RepositoryContext repoContext,ILogger<WeatherForecastController> logger)
+        protected IToolRepository _toolRepository;
+        protected ICheckoutRecordRepository _checkoutRecordRepository;
+        public WeatherForecastController(IToolRepository toolRepository, ICheckoutRecordRepository checkoutRecordRepository, ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
-            _repositoryContext = repoContext;
+            _toolRepository = toolRepository;
+            _checkoutRecordRepository = checkoutRecordRepository;
+            //don't forget to add this interface to dependency injection in startup
         }
 
         [HttpGet]
-        public ActionResult<List<Tool>> Get()
+        public ActionResult<List<CheckoutRecord>> Get()
         {
-            var result= _repositoryContext.Tools.Find(tool=>true ).ToList();
+            var result= _checkoutRecordRepository.GetAllCheckoutRecords().ToList();
                       //  _books.Find(book => true).ToList();
             Console.WriteLine(result);
-            foreach(Tool t in result) {
-                Console.WriteLine(t.ToolId);
-                Console.WriteLine(t.ToolId.ToString());
+            foreach(CheckoutRecord t in result) {
+                Console.WriteLine(t.CheckoutRecordId);
+                Console.WriteLine(t);
+                Console.WriteLine(t.ToString());
             }
+
+            return result;
+
+           //return tools.ToEnumerable().ToArray();;
+            
+            /*var rng = new Random();
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = rng.Next(-20, 55),
+                Summary = Summaries[rng.Next(Summaries.Length)]
+            })
+            .ToArray();*/
+        }
+         [HttpGet]
+         [Route("getone/{id}")]
+        public ActionResult<CheckoutRecord> Get(string id)
+        {
+            var result= _checkoutRecordRepository.GetCheckoutRecordById(id);
+                      //  _books.Find(book => true).ToList();
+            Console.WriteLine(result);
+            
+
             return result;
 
            //return tools.ToEnumerable().ToArray();;
