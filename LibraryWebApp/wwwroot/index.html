@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>To-do CRUD</title>
+    <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+
+
+
+
+
+    <p id="counter"></p>
+    <table>
+        <tr>
+            <th></th>
+            <th>Id-Make this hidden later</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Quantity Available</th>
+            <th>Daily Cost</th>
+           
+            <th>Replacement Cost</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tbody id="tools"></tbody>
+    </table>
+
+    <h1>Tools Management</h1>
+    <h3>Add</h3>
+    <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
+        <input type="text" id="add-name" placeholder="New tool name">
+        <input type="text" id="add-description" placeholder="New tool description">
+        <input type="number" id="add-quantity">
+        <input type="number" id="add-daily-cost">
+        <input type="number" id="add-replacement-cost"
+
+        <input type="submit" value="Add">
+    </form>
+
+    <div id="editForm">
+        <h3>Edit</h3>
+        <form action="javascript:void(0);" onsubmit="updateItem()">
+            <input type="hidden" id="edit-id">
+            <input type="checkbox" id="edit-isComplete">
+            <input type="text" id="edit-name">
+            <input type="submit" value="Save">
+            <a onclick="closeInput()" aria-label="Close">&#10006;</a>
+        </form>
+    </div>
+
+    <script src="js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        getItems();
+    </script>
+</body>
+</html>
