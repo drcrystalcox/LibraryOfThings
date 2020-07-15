@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using LibraryWebApp.Repository;
 using LibraryWebApp.BusinessLogic;
+using System.Text.Json;
 
 namespace LibraryWebApp
 {
@@ -40,6 +41,14 @@ namespace LibraryWebApp
     services.AddSwaggerGen();
 
             services.AddControllers();
+          /*  .AddJsonOptions(options => {
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            }
+            
+            // .AddJsonOptions(options => {
+            //     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            // }
+            );*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +58,9 @@ namespace LibraryWebApp
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseHttpsRedirection();
 

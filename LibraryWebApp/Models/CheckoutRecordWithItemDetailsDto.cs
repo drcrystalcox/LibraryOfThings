@@ -5,15 +5,12 @@ using System;
 using System.Collections.Generic;
 
 namespace LibraryWebApp.Models {
-    public class CheckoutRecord{
+    public class CheckoutRecordWithItemDetailsDto{
         
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-       [BsonElement("_id")]
         public string CheckoutRecordId {get;set;}
 
         public string ItemCheckedOutId {get;set;}
-        public ILibraryItem item {get; set;}
+        public Tool theItem{get;set;}
 
         public string CustomerId {get;set;}
 

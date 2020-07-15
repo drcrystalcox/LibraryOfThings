@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using LibraryWebApp.BusinessLogic;
 using LibraryWebApp.Models;
+using System.Linq;
 
 namespace LibraryWebApp.Controllers
 {
@@ -28,6 +29,41 @@ namespace LibraryWebApp.Controllers
             try
             {
                 var checkoutRecords =  _checkoutRecordServices.getAllCheckoutRecords();
+ 
+                _logger.LogInformation($"Returned all owners from database.");
+                return Ok(checkoutRecords);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAllOwners action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+        [HttpGet]
+        [Route("open")]
+        public  IActionResult GetAllOpenCheckoutRecordsWithItemDetails()
+        {
+            try
+            {
+                var checkoutRecords =  _checkoutRecordServices.getAllCheckoutRecordsWithItemDetails();
+                var openRecords = checkoutRecords.Where(c => !c.HasBeenReturned);
+ 
+                _logger.LogInformation($"Returned all owners from database.");
+                return Ok(openRecords);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetAllOwners action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+        [HttpGet]
+        [Route("details")]
+        public  IActionResult GetAllCheckoutRecordsWithItemDetails()
+        {
+            try
+            {
+                var checkoutRecords =  _checkoutRecordServices.getAllCheckoutRecordsWithItemDetails();
  
                 _logger.LogInformation($"Returned all owners from database.");
                 return Ok(checkoutRecords);

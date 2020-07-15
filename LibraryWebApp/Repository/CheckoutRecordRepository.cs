@@ -1,14 +1,18 @@
 using System.Collections.Generic;
 using LibraryWebApp.Models;
 using MongoDB.Driver;
+using LibraryWebApp.Models;
+using LibraryWebApp.BusinessLogic;
 using System;
 
 namespace LibraryWebApp.Repository{
     public class CheckoutRecordRepository : ICheckoutRecordRepository {
         protected RepositoryContext _repositoryContext;
+       
 
         public CheckoutRecordRepository(RepositoryContext repoContext){
             _repositoryContext = repoContext;
+            
         }
 
         public IEnumerable<CheckoutRecord> GetAllCheckoutRecords() {
@@ -28,6 +32,9 @@ namespace LibraryWebApp.Repository{
 
         public CheckoutRecord Create(CheckoutRecord checkoutRecord) {
             _repositoryContext.CheckoutRecords.InsertOne(checkoutRecord);
+
+            
+            //_repositoryContext.Tools.UpdateOne
             Console.WriteLine("checkoutRecord after inserting:"+checkoutRecord.CheckoutRecordId);
             //
             return checkoutRecord;

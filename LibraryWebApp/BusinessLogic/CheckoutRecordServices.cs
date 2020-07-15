@@ -8,9 +8,11 @@ namespace LibraryWebApp.BusinessLogic{
     public class CheckoutRecordServices : ICheckoutRecordServices {
         
         protected ICheckoutRecordRepository _checkoutRecordRepository;
+        protected IToolServices _toolServices;
 
-        public CheckoutRecordServices(ICheckoutRecordRepository checkoutRecordRepo){
+        public CheckoutRecordServices(ICheckoutRecordRepository checkoutRecordRepo,IToolServices toolservices){
             _checkoutRecordRepository = checkoutRecordRepo;
+            _toolServices = toolservices;
         }
         public IEnumerable<CheckoutRecord> getAllCheckoutRecords(){
             var results =  _checkoutRecordRepository.GetAllCheckoutRecords();
@@ -34,6 +36,63 @@ namespace LibraryWebApp.BusinessLogic{
 			return ownerDtos;*/
             //return _mapper.Map<IEnumerable<OwnerDto>>(results);
             return results;
+        }
+        public IEnumerable<CheckoutRecordWithItemDetailsDto> getAllCheckoutRecordsWithItemDetails(){
+            var results =  _checkoutRecordRepository.GetAllCheckoutRecords();
+
+            IList<CheckoutRecordWithItemDetailsDto> checkoutRecordsWithDetailsDtos = new List<CheckoutRecordWithItemDetailsDto>();
+            foreach(CheckoutRecord cr in results) {
+                Tool item = _toolServices.GetToolById(cr.ItemCheckedOutId);
+                //Console.WriteLine($"Found {cr.ItemCheckedOutId}: {item.Name}");
+                
+                CheckoutRecordWithItemDetailsDto crDetails = new CheckoutRecordWithItemDetailsDto() {
+                    
+                    CheckoutRecordId =cr.CheckoutRecordId,
+                    ItemCheckedOutId = cr.ItemCheckedOutId,
+                    theItem = new Tool(){
+                        ToolId=item.ToolId,
+                        Name=item.Name,
+                        Description=item.Description,
+                        QuantityAvailable=item.QuantityAvailable,
+                        DailyCost=item.DailyCost,
+                        ReplacementCost=item.ReplacementCost
+    
+                    },
+                    CustomerId =cr.CustomerId,
+                     DateCheckedOut=cr.DateCheckedOut,  
+                     DateDue=cr.DateDue,
+                     DateReturned =cr.DateReturned,
+                      Notes=cr.Notes,
+                       AgreedDailyCost=cr.AgreedDailyCost, 
+                        AmountPaid =cr.AmountPaid,
+                         HasBeenReturned =cr.HasBeenReturned
+
+                };
+                checkoutRecordsWithDetailsDtos.Add(crDetails);
+                //Console.WriteLine(crDetails);
+            } 
+            
+            return checkoutRecordsWithDetailsDtos;
+          
+			
+            /*var results = await _repositoryWrapper.Owner.GetAllOwnersAsync();
+
+			var ownerDtos = results.Select(o => new OwnerDto()
+			{
+				Id = o.Id,
+				Name = o.Name,
+				Address = o.Address,
+				Accounts = o.Accounts.Select(a => new AccountDto()
+				{
+					AccountType = a.AccountType,
+					DateCreated = a.DateCreated,
+					Id = a.Id
+				})
+			});
+
+			return ownerDtos;*/
+            //return _mapper.Map<IEnumerable<OwnerDto>>(results);
+            //return results;
         }
 
         public CheckoutRecord GetCheckoutRecordById(string checkoutRecordId){
@@ -88,6 +147,22 @@ public string CheckoutRecordId {get;set;}
             */
 
                 CheckoutRecord createdCheckoutRecord=_checkoutRecordRepository.Create(checkoutRecord);
+                
+                //decrement the item id quantity
+                string itemId = createdCheckoutRecord.ItemCheckedOutId;
+                //later, generalize to be items instead of tools
+                Tool originalTool = _toolServices.GetToolById(itemId);
+                ToolForUpdateDto tool = new ToolForUpdateDto() {
+                    Name = originalTool.Name,
+                    Description=originalTool.Description,
+                    DailyCost =originalTool.DailyCost,
+                    ReplacementCost=originalTool.ReplacementCost,
+                    QuantityAvailable = --originalTool.QuantityAvailable
+                };
+                _toolServices.UpdateTool(itemId, tool);
+                
+                
+                
                 return createdCheckoutRecord;
 
         }
@@ -112,7 +187,15 @@ public string CheckoutRecordId {get;set;}
             checkoutRecord.HasBeenReturned=true;
             //leave all the rest unchanged from after the retrieve
             
-            
+             Tool originalTool = _toolServices.GetToolById(checkoutRecord.ItemCheckedOutId);
+                ToolForUpdateDto tool = new ToolForUpdateDto() {
+                    Name = originalTool.Name,
+                    Description=originalTool.Description,
+                    DailyCost =originalTool.DailyCost,
+                    ReplacementCost=originalTool.ReplacementCost,
+                    QuantityAvailable = ++originalTool.QuantityAvailable
+                };
+                _toolServices.UpdateTool(checkoutRecord.ItemCheckedOutId, tool);
             
 
 			 _checkoutRecordRepository.Update(checkoutRecord.CheckoutRecordId, checkoutRecord);
