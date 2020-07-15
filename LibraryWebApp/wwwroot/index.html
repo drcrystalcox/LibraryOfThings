@@ -3,39 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <title>To-do CRUD</title>
-    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="css/site.css?r=1" />
 </head>
 <body>
 
 
 
 
-
+    <h1>Tool Inventory</h1>
     <p id="counter"></p>
     <table>
         <tr>
             <th></th>
-            <th>Id-Make this hidden later</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Quantity Available</th>
-            <th>Daily Cost</th>
+            <th onclick="sortById()">Id-Make this hidden later</th>
+            <th onclick="sortByName()">Name</th>
+            <th onclick="sortByDescription()">Description</th>
+            <th onclick="sortByQuantityAvailable()">Quantity Available</th>
+            <th onclick="sortByDailyCost()">Daily Cost</th>
            
-            <th>Replacement Cost</th>
+            <th onclick="sortByReplacementCost()">Replacement Cost</th>
             <th></th>
             <th></th>
         </tr>
         <tbody id="tools"></tbody>
     </table>
 
-    <h1>Tools Management</h1>
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Checkout Form</h3>
+            <p>
+                <form id="checkoutForm" action="javascript:void(0);" method="POST" onsubmit="checkoutItem()">
+                    <label for="checkout-itemName">Item Name</label>
+                    <input type="text" id="checkout-itemName" placeholder="name here" ><br />
+                    <input type="hidden" id="checkout-itemId">
+                    <label for="checkout-customerId">Enter Customer Id:</label>
+                    <input type="text" id="checkout-customerId"><br /
+                    <label for="checkout-itemDailyCost">Regular Daily Cost</label>
+                    <input type="number" id="checkout-itemDailyCost"><br /
+                    <label for="checkout-agreedDailyCost">Enter Final Daily Cost: </label>
+                    <input type="number" id="checkout-agreedDailyCost"><br /
+                    <label for="checkout-dateCheckedOut">Date Checked Out</label>
+                    <input type="date" id="checkout-dateCheckedOut"><br /
+                    <label for="checkout-dateDue">Date Due</label>
+                    <input type="date" id="checkout-dateDue"><br />
+
+                    <input type="submit" value="Complete Checkout">
+
+                </form>
+            </p>
+        </div>
+    </div>
+
+    <div id="checkinModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Check In Form</h3>
+            <p>
+                <form id="checkinForm" action="javascript:void(0);" method="POST" onsubmit="checkinItem()">
+                    <label for="checkin-itemName">Item Name</label>
+                    <input type="text" id="checkin-itemName" placeholder="name here" ><br />
+                    <input type="hidden" id="checkin-checkoutRecordId">
+                    <label for="checkin-customerId">Enter Customer Id:</label>
+                    <input type="text" id="checkin-customerId"><br /
+                    <label for="checkin-itemDailyCost">Regular Daily Cost</label>
+                    <input type="number" id="checkin-itemDailyCost"><br /
+                    <label for="checkin-agreedDailyCost">Enter Final Daily Cost: </label>
+                    <input type="number" id="checkin-agreedDailyCost"><br /
+                    <label for="checkin-dateCheckedOut">Date Checked Out</label>
+                    <input type="date" id="checkin-dateCheckedOut"><br /
+                    <label for="checkin-dateDue">Date Due</label>
+                    <input type="date" id="checkin-dateDue"><br />
+                    <label for="checkin-dateReturned">Enter Date Returned:</label>
+                    <input type="date" id="checkin-dateReturned"><br />
+                    <label for="checkin-amountPaid">Enter Amount Paid:</label>
+                    <input type="number" id="checkin-amountPaid"><br />
+
+                    <input type="submit" value="Complete Check In">
+
+                </form>
+            </p>
+            <p id="checkin-result"></p>
+        </div>
+    </div>
+
+
+    <h1>Tool Management</h1>
     <h3>Add</h3>
     <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
-        <input type="text" id="add-name" placeholder="New tool name">
-        <input type="text" id="add-description" placeholder="New tool description">
-        <input type="number" id="add-quantity">
-        <input type="number" id="add-daily-cost">
-        <input type="number" id="add-replacement-cost"
+        <label for="add-name">Tool Name</label>
+        <input type="text" id="add-name" placeholder="New tool name"><br />
+        <label for="add-description">Description</label>
+        <input type="text" id="add-description" placeholder="New tool description"><br />
+        <label for="add-quantity">How many available?</label>
+        <input type="number" id="add-quantity"><br />
+        <label for="add-daily-cost">Daily Rental Rate</label>
+        <input type="number" id="add-daily-cost"><br />
+        <label for="add-replacement-cost">Cost to Replace</label>
+        <input type="number" id="add-replacement-cost"><br />
 
         <input type="submit" value="Add">
     </form>
@@ -44,16 +109,46 @@
         <h3>Edit</h3>
         <form action="javascript:void(0);" onsubmit="updateItem()">
             <input type="hidden" id="edit-id">
-            <input type="checkbox" id="edit-isComplete">
-            <input type="text" id="edit-name">
+           
+            <label for="edit-name">Tool Name</label>
+            <input type="text" id="edit-name"><br />
+            <label for="edit-description">Description</label>
+            <input type="text" id="edit-description"><br />
+            <label for="edit-quantity">How many available?</label>
+            <input type="number" id="edit-quantity"><br />
+            <label for="edit-daily-cost">Daily Rental Cost</label>
+            <input type="number" id="edit-daily-cost"><br />
+            <label for="edit-replacement-cost">Cost to Replace</label>
+            <input type="number" id="edit-replacement-cost"><br />
             <input type="submit" value="Save">
             <a onclick="closeInput()" aria-label="Close">&#10006;</a>
         </form>
     </div>
 
+
+    <h1>Checkout Records</h1>
+    <p id="recordsCounter"></p>
+    <table>
+        <tr>
+            <th></th>
+            <th onclick="sortById()">Id-Make this hidden later</th>
+            <th onclick="sortByItemId()">Item Id</th>
+            <th onclick="sortByCustomerId()">Customer Id</th>
+            <th onclick="sortByDateCheckedOut()">Date Checked Out</th>
+            <th onclick="sortByDateDue()">Date Due</th>
+            <th onclick="sortByAgreedDailyCost()">Agreed Daily Cost</th>
+
+            <th onclick="sortByDateReturned()">Date Returned</th>
+            <th onclick="sortByAmountPaid()">Amount Paid</th>
+            <th onclick="sortByHasBeenReturned()">Has Been Returned</th>
+        </tr>
+        <tbody id="records"></tbody>
+    </table>
+
     <script src="js/site.js" asp-append-version="true"></script>
     <script type="text/javascript">
         getItems();
+        getRecords();
     </script>
 </body>
 </html>
